@@ -2,42 +2,41 @@ library(shiny)
 library(ggplot2)
 library(gridExtra)
 
+source("src/plot_best_algos.R")
+source("src/plot_comparison_families.R")
+source("src/plot_comparison_best.R")
+
 load(file="data/algos_family.Rda")
 load(file="data/results.Rda")
 load(file="data/results_ranking.Rda")
-
-stats <- data.frame(colMeans(t(apply(-results_ranking[,!names(results_ranking) %in% c("order","max")], 1, rank, ties.method='average'))))
-colnames(stats) <- 'FriedmanRank'
-stats['Accuracy']  <- colMeans(results, na.rm = TRUE)
-stats['Algorithm'] <- rownames(stats)
-stats['Family'] <- algos_family
-stats <- stats[order(stats$FriedmanRank),]
-stats['Rank'] <- c(1:dim(stats)[1])
-
-results_ranking$max <- apply(results_ranking,1,max)
-results_ranking$order[order(results_ranking$max)] <- 1:121
-
-# stats_f <- data.frame(unique(algos_family$family))
-# colnames(stats_f) <- "Family"
-# stats_f.
-# stats.aqggregate(stats, by=list(stats$Family))
-
-# library(RColorBrewer)
-# colors_ <- brewer.pal(9,"Set1")
-colors <- c("elm_kernel_matlab" = "#FF7F00", 
-             "Bagging_LibSVM_weka" = "#984EA3",
-             "adaboost_R" = "black",
-             "C5.0_caret" = "#4DAF4A",
-             "BayesNet_weka" = "#FFFF33",
-             "parRF_caret" = "#377EB8",
-             "fda_caret" = "#A65628",
-             "svm_C" = "#E41A1C",
-             "glmnet_R" = "#F781BF",
-             "knn_caret" =  "#999999")
+load(file="data/info_tables.Rda")
+load(file="data/stats_bin.Rda")
+load(file="data/stats_all.Rda")
 
 
-# Define server logic required to summarize and view the 
-# selected dataset
+
+selected_algos = list("NNET - avNNet_caret" = "avNNet_caret", 
+                      "BAG - Bagging_LibSVM_weka" = "Bagging_LibSVM_weka",
+                      "BST - adaboost_R" = "adaboost_R",
+                      "DT - C5.0_caret" = "C5.0_caret",
+                      "BY - BayesNet_weka" = "BayesNet_weka",
+                      "RF - parRF_caret" = "parRF_caret",
+                      "DA - fda_caret" = "fda_caret",
+                      "SVM - svm_C" = "svm_C",
+                      "GLM - glmnet_R" = "glmnet_R",
+                      "NN - knn_caret" = "knn_caret")
+colors <- c("avNNet_caret" = "#FF7F00", 
+            "Bagging_LibSVM_weka" = "#984EA3",
+            "adaboost_R" = "black",
+            "C5.0_caret" = "#4DAF4A",
+            "BayesNet_weka" = "#FFFF33",
+            "parRF_caret" = "#377EB8",
+            "fda_caret" = "#A65628",
+            "svm_C" = "#E41A1C",
+            "glmnet_R" = "#F781BF",
+            "knn_caret" =  "#999999")
+
+
 shinyServer(function(input, output) {
 
   output$ui <- renderUI({
@@ -48,82 +47,52 @@ shinyServer(function(input, output) {
     )
   })
   
+  output$slides <- renderUI({
+    tags$iframe(src = "slides.html",height=800, width=1124 )
+  })
+  
   # Filter data based on selections
+  output$table_algos <- renderDataTable({
+      temp <- algos_family
+      temp[,"Algorithm"] = rownames(algos_family)
+      if (input$family1 == "ALL"){
+        temp
+      }else{
+        temp[which(temp$family == input$family1),]
+      }
+  }, options = list(paging = FALSE, pageLength = -1, searching = FALSE))
+  
   output$table <- renderDataTable({
+    if (input$filter_binary == "All"){
+      temp <- stats_all
+    } else {
+      temp <- stats_bin
+    }
     if (is.null(input$family))
-      return(stats[, c(5,3,4,1,2)])
-    
+      return(temp[, c(5,3,4,1,2)])
     if (input$family == "ALL"){
-      stats[, c(5,3,4,1,2)]
+      temp[, c(5,3,4,1,2)]
     }else{
-      stats[which(stats$Family == input$family), c(5,3,4,1,2)]
+      temp[which(temp$Family == input$family), c(5,3,4,1,2)]
     }
   }, options = list(pageLength = 15, searching = FALSE))
   
   output$table_plot_family = renderPlot({
-    ggplot(stats, aes(x=reorder(stats$Family, stats$FriedmanRank), y=FriedmanRank, fill=Family)) + 
-      geom_boxplot() + guides(fill=FALSE) + xlab("Family")
+    plot_comparison_families(stats_all, stats_bin, input$filter_binary)
   })
   
-  output$table_plot_family2 = renderPlot({
-    ggplot(stats, aes(x=reorder(stats$Family, -stats$Accuracy), y=Accuracy, fill=Family)) + 
-      geom_boxplot() + guides(fill=FALSE) + xlab("Family")
-  })
-  
-  output$text_temp = renderPrint(input$table_by)
-
   output$plot_per_best_acc = renderPlot({
     # a <- c("parRF_caret", "svm_C", "elm_kernel_matlab")
-    # a <- c("svm_C")
     a <- input$best_acc_by2
-    
-    # Create data frame for the per of max each algo
-    temp <- data.frame(results_ranking[a[1]] / results_ranking$max * 100)
-    colnames(temp) <- a[1]
-    colors_= data.frame(a)
-    colors_[1,'color'] = colors[a[1]]
-    if (length(a) > 1){
-      for (i in 2:length(a)){
-        temp[,a[i]] <- data.frame(results_ranking[a[i]] / results_ranking$max * 100)
-        colors_[i,'color'] = colors[a[i]]
-      }
-    }
-    
-    # create plots
-    # plt1 is percentage of maximun
-    plt1 <- ggplot(results_ranking[order(results_ranking$max),]) + ylim(0, 100) + xlab("Data set")+
-      geom_line(colour="#999999", aes_string(x="order", y="max")) +
-      geom_line(colour=colors[a[1]], aes_string(x="order", y=a[1])) 
-    # plt2 is distribution of the percentage of maximun
-    plt2 <- ggplot(temp) +  xlim(0,100) + xlab("Data set") + xlim(75,100) + ylim(0,0.17) +
-      geom_density(aes_string(x=a[1],y="..density.."),  color=colors[a[1]], fill=colors[a[1]], alpha=0.3)
-    
-    if (length(a) > 1){
-      for (i in 2:length(a)){
-        plt1 <- plt1 + geom_line(colour=colors[a[i]], aes_string(x="order", y=a[i])) 
-        plt2 <- plt2 + geom_density(aes_string(x=a[i], y="..density.."),  color=colors[a[i]], fill=colors[a[i]], alpha=0.3)
-      }
-    }
-    
-    # Create legend
-    g_legend<-function(a.gplot){ 
-      tmp <- ggplot_gtable(ggplot_build(a.gplot)) 
-      leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box") 
-      legend <- tmp$grobs[[leg]] 
-      return(legend)} 
-    # Temp histogram to extract the legend
-    temp1 <- as.data.frame(t(results_ranking[1,a]))
-    colnames(temp1) <- c("temp")
-    temp1[,"color"] = colors_[,"color"]
-    temp1[,"Algorithm"] = rownames(temp1)
-    my_hist<- ggplot(temp1, aes(temp, fill=Algorithm)) + geom_bar() + theme(legend.position="bottom") + scale_fill_manual(values = colors)
-    legend <- g_legend(my_hist)
-    
-    # Combine plots
-    grid.arrange(arrangeGrob(plt1 + theme(legend.position="none"),
-                             plt2 + theme(legend.position="none"),
-                             nrow=2), legend, nrow=2,heights=c(10, 1))
-
+    plot_best_algos(a, results_ranking, info_tables, input$filter_binary, colors)
+  })
+  
+  output$plot_comparison = renderPlot({
+    a <- input$best_acc_by3
+    plot_comparison_best(a,selected_algos,colors,results_ranking,info_tables,input$filter_binary)
   })
   
 })
+
+
+
