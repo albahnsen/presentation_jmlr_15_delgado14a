@@ -23,6 +23,6 @@ g4 <- ggplot(info_tables, aes(x=classes))  + geom_density() +
   geom_vline(aes(xintercept=mean(classes)), size=1, linetype="dashed") +
   xlim(2,25)
 
-png("figures/fig_datasets_properties.png")
+png("www/fig_datasets_properties.png", width = 900, height=600, units="px")
 grid.arrange(g3,g4,g1,g2, ncol=2)
 dev.off()
