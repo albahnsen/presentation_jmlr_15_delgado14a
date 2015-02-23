@@ -5,6 +5,7 @@ library(gridExtra)
 source("src/plot_best_algos.R")
 source("src/plot_comparison_families.R")
 source("src/plot_comparison_best.R")
+source("src/plot_weighted_acc.R")
 
 load(file="data/algos_family.Rda")
 load(file="data/results.Rda")
@@ -92,7 +93,15 @@ shinyServer(function(input, output) {
     plot_comparison_best(a,selected_algos,colors,results_ranking,info_tables,input$filter_binary)
   })
   
+  output$plot_weighted = renderPlot({
+    plot_weighted_acc(selected_algos,colors,results_ranking,info_tables,input$weighted,input$filter_binary)
+  })
 })
+
+
+
+
+
 
 
 

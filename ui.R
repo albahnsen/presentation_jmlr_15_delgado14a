@@ -16,7 +16,7 @@ selected_algos = list("NNET - avNNet_caret" = "avNNet_caret",
 shinyUI(navbarPage("Paper - Comparison classifiers",
   tabPanel("Introduction", htmlOutput('slides')
   ),
-  navbarMenu("Setup",
+  navbarMenu("Experimental Setup",
              tabPanel("Datasets",
                       tabsetPanel(type="tabs",
                                   tabPanel("Datasets1", includeMarkdown("www/desc_datasets.md")),
@@ -43,7 +43,7 @@ shinyUI(navbarPage("Paper - Comparison classifiers",
     tabsetPanel(type="tabs",
       tabPanel("Friedman Ranking",
            sidebarLayout(
-             sidebarPanel(
+             sidebarPanel( width = 2,
                selectInput("table_by", "Results by:",
                            c("Algorithm", "Family")),
                uiOutput("ui"),
@@ -55,34 +55,53 @@ shinyUI(navbarPage("Paper - Comparison classifiers",
                                 dataTableOutput("table")
                ),
                conditionalPanel("input.table_by == 'Family'",
-                                plotOutput("table_plot_family")
+                                plotOutput("table_plot_family", height=600)
                )
              )
            )
       ),
       tabPanel("Comparison",
                sidebarLayout(
-                 sidebarPanel(
+                 sidebarPanel( width = 2,
                    checkboxGroupInput("best_acc_by2", label = h3("Checkbox group"), 
                                       choices = selected_algos,  selected = "parRF_caret"),
                    submitButton("Update View")
                  ),
                  mainPanel(
                    h4("Summary"),
-                   plotOutput("plot_per_best_acc")
+                   plotOutput("plot_per_best_acc", height=600)
                  )
                )               
           ),
       tabPanel("T-statistic",
                sidebarLayout(
-                 sidebarPanel(
+                 sidebarPanel(  width = 2,
                    selectInput("best_acc_by3", label = h3("Checkbox group"), 
                                       choices = selected_algos,  selected = "parRF_caret"),
                    submitButton("Update View")
                  ),
                  mainPanel(
                    h4("Summary"),
-                   plotOutput("plot_comparison")
+                   plotOutput("plot_comparison", height=600)
+                 )
+               )               
+      ),
+      tabPanel("Database complexity",
+               sidebarLayout(
+                 sidebarPanel(  width = 2,
+                                radioButtons("weighted", label = h3("Weighted by"), 
+                                            choices = list("Average accuracy" = "um",
+                                                       "Weighted accuracy difficulty" = "uj",
+                                                       "Weighted accuracy # patterns" = "up",
+                                                       "Weighted accuracy dec # patterns" = "ud",
+                                                       "Weighted accuracy # classes" = "ul",
+                                                       "Weighted accuracy # features" = "ui"
+                                            ),  selected = "um"),
+                                submitButton("Update View")
+                 ),
+                 mainPanel(
+                   h4("Summary"),
+                   plotOutput("plot_weighted", height=600)
                  )
                )               
       )
