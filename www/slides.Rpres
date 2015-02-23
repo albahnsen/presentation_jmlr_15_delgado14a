@@ -1,0 +1,70 @@
+========================================================
+font-import: http://fonts.googleapis.com/css?family=Risque
+font-family: 'Risque'
+
+## Do we Need Hundreds of Classifiers to Solve Real World Classification Problems?
+### Fernandez-Delgado, et al (2014)
+### Jounal of Machine Learning Research
+
+
+Alejandro Correa Bahnsen - February 5, 2015
+
+
+Introduction
+========================================================
+
+When a researcher or data analyzer faces to the classification of a data set, he usually
+applies the classifier which he expects to be **the best one**.
+
+This expectation is conditioned by the **practicioner knowledge** about the available classifiers. 
+
+- statistics 
+- data mining
+- machine learning
+- computer vision
+- econometrics
+
+
+More Introduction
+========================================================
+transition: linear
+
+The **lack of available implementation** for many classifiers is a major drawback,
+although it has been partially reduced due to the large amount of classifiers implemented
+
+- R (mainly from Statistics)
+- Weka (from the data mining field)
+- Matlab using the Neural Network Toolbox
+- Python*
+
+
+Introduction
+========================================================
+
+- usually the papers which propose a new classifier compare it only to classifiers within the **same family**,
+excluding families outside the author’s area of expertise
+
+- the comparisons are usually developed over a **few**, although expectedly relevant, data sets.
+
+-  some classifiers with a good average performance over a reduced data
+set collection could achieve significantly worse results when the collection is extended
+
+General criticisms in experimental comparisons
+===
+
+-  The **criterion** used to select the data set collection may bias the comparison results
+
+-  The **selection** of learners is representative enough and whether the selected learners are properly configured (tunned) to work at their best performance 
+
+- It is still impossible to determine the **maximum attainable accuracy** for a data set,
+so that it is difficult to evaluate the true quality of each classifier. 
+
+General criticisms in experimental comparisons
+===
+
+- Since the data set complexity is unknown, we do not know if the **classification error** is caused by unfitted
+classifier design or by intrinsic difficulties of the problem 
+
+- The lack of **standard data partitioning**, defining training and testing data for crossvalidation
+trials. Simply the use of different data partitionings will eventually bias the
+results, and make the comparison between experiments impossible
