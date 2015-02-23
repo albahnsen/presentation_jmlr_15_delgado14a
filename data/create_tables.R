@@ -34,7 +34,7 @@ save(results, file="data/results.Rda")
 # Some names are not the same in restults and the tables
 
 info_tables = data.frame(matrix(NA, nrow=dim(results)[1], ncol=4))
-colnames(info_tables) <- c("obs", "features", "classes", "%majority")
+colnames(info_tables) <- c("obs", "features", "classes", "majority")
 rownames(info_tables) <- rownames(results)
 
 info_tables['abalone',] = c(4177,8,3,34.6)
@@ -362,5 +362,34 @@ for (i in 1:dim(results_ranking)[1]){
   results_ranking[i, is.na(results_ranking[i, ])] <- mean(data.matrix(results_ranking[i, ]),  na.rm = TRUE)
 }
 save(results_ranking, file="data/results_ranking.Rda")
+
+
+# fix databases
+load(file="data/algos_family.Rda")
+load(file="data/results.Rda")
+load(file="data/results_ranking.Rda")
+load(file="data/info_tables.Rda")
+
+
+stats_all <- data.frame(colMeans(t(apply(-results_ranking[,!names(results_ranking) %in% c("order","max")], 1, rank, ties.method='average'))))
+colnames(stats_all) <- 'FriedmanRank'
+stats_all['Accuracy']  <- colMeans(results, na.rm = TRUE)
+stats_all['Algorithm'] <- rownames(stats_all)
+stats_all['Family'] <- algos_family
+stats_all <- stats_all[order(stats_all$FriedmanRank),]
+stats_all['Rank'] <- c(1:dim(stats_all)[1])
+save(stats_all, file="data/stats_all.Rda")
+
+
+filter_ = (info_tables[,"classes"] == 2)
+stats_bin <- data.frame(colMeans(t(apply(-results_ranking[filter_ == "TRUE",!names(results_ranking) %in% c("order","max")], 1, rank, ties.method='average'))))
+colnames(stats_bin) <- 'FriedmanRank'
+stats_bin['Accuracy']  <- colMeans(results[filter_ == "TRUE",], na.rm = TRUE)
+stats_bin['Algorithm'] <- rownames(stats_bin)
+stats_bin['Family'] <- algos_family
+stats_bin <- stats_bin[order(stats_bin$FriedmanRank),]
+stats_bin['Rank'] <- c(1:dim(stats_bin)[1])
+save(stats_bin, file="data/stats_bin.Rda")
+
 
 
