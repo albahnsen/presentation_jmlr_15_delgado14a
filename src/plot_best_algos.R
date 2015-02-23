@@ -23,18 +23,18 @@ plot_best_algos <- function(a,results_ranking, info_tables, results_by,colors) {
   # create plots
   # plt1 is percentage of maximun
   plt1 <- ggplot(results_ranking[order(results_ranking$max),]) + ylim(0, 100) + xlab("Data set")+
-    geom_line(colour="#999999", aes_string(x="order", y="max")) +
+    geom_line(colour="#999999", aes_string(x="order", y="max"), size=2) +
     geom_line(colour=colors[a[1]], aes_string(x="order", y=a[1])) 
   # plt2 is distribution of the percentage of maximun
   plt2 <- ggplot(temp) +  xlim(0,100) + xlab("Data set") + xlim(90,100) + 
     geom_density(aes_string(x=a[1],y="..density.."),  color=colors[a[1]], fill=colors[a[1]], alpha=0.3) +
-    geom_vline(aes(xintercept=mean(temp[,a[1]])), color=colors[a[1]], linetype="dashed", size=2)
+    geom_vline(xintercept=mean(temp[,a[1]]), color=colors[a[1]], linetype="dashed", size=2)
   
   if (length(a) > 1){
     for (i in 2:length(a)){
       plt1 <- plt1 + geom_line(colour=colors[a[i]], aes_string(x="order", y=a[i])) 
       plt2 <- plt2 + geom_density(aes_string(x=a[i], y="..density.."),  color=colors[a[i]], fill=colors[a[i]], alpha=0.3) +
-        geom_vline(aes(xintercept=mean(temp[,a[i]])), color=colors[a[i]], linetype="dashed", size=2)
+        geom_vline(xintercept=mean(temp[,a[i]]), color=colors[a[i]], linetype="dashed", size=2)
     }
   }
   
@@ -53,9 +53,9 @@ plot_best_algos <- function(a,results_ranking, info_tables, results_by,colors) {
   legend <- g_legend(my_hist)
   
   # Combine plots
-  grid.arrange(arrangeGrob(plt1 + theme(legend.position="none"),
-                           plt2 + theme(legend.position="none"),
-                           nrow=2), legend, nrow=2,heights=c(15, 1))
+  grid.arrange(arrangeGrob(plt1 + theme(legend.position="none")+theme(text = element_text(size=20)),
+                           plt2 + theme(legend.position="none")+theme(text = element_text(size=20)),
+                           nrow=2), legend+theme(text = element_text(size=20)), nrow=2,heights=c(15, 1))
 }
 
 # a <- c("parRF_caret", "svm_C", "elm_kernel_matlab")

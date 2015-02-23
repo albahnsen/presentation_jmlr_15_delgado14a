@@ -24,5 +24,5 @@ g4 <- ggplot(info_tables, aes(x=classes))  + geom_density() +
   xlim(2,25)
 
 png("www/fig_datasets_properties.png", width = 900, height=600, units="px")
-grid.arrange(g3,g4,g1,g2, ncol=2)
+grid.arrange(g3+theme(text = element_text(size=20)),g4+theme(text = element_text(size=20)),g1+theme(text = element_text(size=20)),g2+theme(text = element_text(size=20)), ncol=2)
 dev.off()

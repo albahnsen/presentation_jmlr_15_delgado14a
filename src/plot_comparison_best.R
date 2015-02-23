@@ -21,5 +21,5 @@ plot_comparison_best <- function(a,selected_algos,colors,results_ranking,info_ta
   
   ggplot(res_t2, aes(x=reorder(factor(algo), diff), diff, fill=algo)) +  
     geom_boxplot(outlier.shape = NA,alpha=0.3) + guides(fill=FALSE) + 
-    xlab("Family") + ylim(-5,10) + scale_fill_manual(values = colors)
+    xlab("Family") + ylim(-5,10) + scale_fill_manual(values = colors) +theme(text = element_text(size=20))
 }
