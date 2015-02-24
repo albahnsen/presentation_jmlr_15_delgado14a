@@ -1,4 +1,5 @@
 library(shiny)
+require(markdown)
 load(file="data/algos_family.Rda")
 
 selected_algos = list("NNET - avNNet_caret" = "avNNet_caret", 

@@ -49,13 +49,13 @@ plot_best_algos <- function(a,results_ranking, info_tables, results_by,colors) {
   colnames(temp1) <- c("temp")
   temp1[,"color"] = colors_[,"color"]
   temp1[,"Algorithm"] = rownames(temp1)
-  my_hist<- ggplot(temp1, aes(temp, fill=Algorithm)) + geom_bar() + theme(legend.position="bottom") + scale_fill_manual(values = colors)
+  my_hist<- ggplot(temp1, aes(temp, fill=Algorithm)) + geom_bar() + theme(legend.position="bottom") + scale_fill_manual(values = colors) + theme(text = element_text(size=20))
   legend <- g_legend(my_hist)
   
   # Combine plots
-  grid.arrange(arrangeGrob(plt1 + theme(legend.position="none")+theme(text = element_text(size=20)),
-                           plt2 + theme(legend.position="none")+theme(text = element_text(size=20)),
-                           nrow=2), legend+theme(text = element_text(size=20)), nrow=2,heights=c(15, 1))
+  grid.arrange(arrangeGrob(plt1 + theme(legend.position="none", text = element_text(size=20)),
+                           plt2 + theme(legend.position="none", text = element_text(size=20)), ncol=1,
+                           nrow=2), legend, ncol=1, nrow=2, heights=c(15, 1))
 }
 
 # a <- c("parRF_caret", "svm_C", "elm_kernel_matlab")
