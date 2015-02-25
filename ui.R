@@ -5,7 +5,7 @@ load(file="data/algos_family.Rda")
 load(file="data/algos.Rda")
 selected_algos <- split(algos$Algorithm, algos$FullName)
 
-shinyUI(navbarPage("Paper - Comparison classifiers",
+shinyUI(navbarPage("Paper - DWNHC",
   tabPanel("Introduction", htmlOutput('slides')
   ),
   navbarMenu("Experimental Setup",

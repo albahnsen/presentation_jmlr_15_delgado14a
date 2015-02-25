@@ -9,6 +9,15 @@ font-family: 'Risque'
 
 Alejandro Correa Bahnsen - February 5, 2015
 
+Introduction
+========
+It is not that common that a research paper generates such of a variety of feelings within a community, specially not in the machine learning field
+
+- "Obviously, it pays to tune your model" [link](http://appliedpredictivemodeling.com/blog/2014/11/11/some-thoughts-on-do-we-need-hundreds-of-classifiers-to-solve-real-world-classification-problems)
+- "everybody already knows about them" [link](http://www.win-vector.com/blog/2014/12/a-comment-on-preparing-data-for-classifiers/)
+- "This is consistent with our experience running hundreds of Kaggle competitions" [link](https://news.ycombinator.com/item?id=8719723)
+- "This is huge study" [link](http://machinelearningmastery.com/use-random-forest-testing-179-classifiers-121-datasets/)
+- "No sklearn" [link](http://www.statsblogs.com/2014/12/19/the-geometry-of-classifiers/)
 
 Introduction
 ========================================================
