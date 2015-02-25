@@ -383,7 +383,8 @@ stats_all <- data.frame(colMeans(t(apply(-results_ranking[,!names(results_rankin
 colnames(stats_all) <- 'FriedmanRank'
 stats_all['Accuracy']  <- colMeans(results, na.rm = TRUE)
 stats_all['Algorithm'] <- rownames(stats_all)
-stats_all['Family'] <- algos_family
+stats_all['Family'] <- algos_family$Family
+stats_all['Implementation'] <- algos_family$Implementation
 stats_all <- stats_all[order(stats_all$FriedmanRank),]
 stats_all['Rank'] <- c(1:dim(stats_all)[1])
 save(stats_all, file="data/stats_all.Rda")
@@ -394,7 +395,8 @@ stats_bin <- data.frame(colMeans(t(apply(-results_ranking[filter_ == "TRUE",!nam
 colnames(stats_bin) <- 'FriedmanRank'
 stats_bin['Accuracy']  <- colMeans(results[filter_ == "TRUE",], na.rm = TRUE)
 stats_bin['Algorithm'] <- rownames(stats_bin)
-stats_bin['Family'] <- algos_family
+stats_all['Family'] <- algos_family$Family
+stats_all['Implementation'] <- algos_family$Implementation
 stats_bin <- stats_bin[order(stats_bin$FriedmanRank),]
 stats_bin['Rank'] <- c(1:dim(stats_bin)[1])
 save(stats_bin, file="data/stats_bin.Rda")
