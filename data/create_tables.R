@@ -433,3 +433,16 @@ for (i in 1:15){
 save(algos, file="data/algos.Rda")
 colors <- setNames(as.vector(algos$color), algos$Algorithm)
 selected_algos <- split(algos$Algorithm, algos$FullName)
+
+
+
+# Import Results from sklearn
+load(file="experiments_sklearn/ExploreModels/results_sklearn.RDa")
+
+# Row audiology-std is repeted
+results_sklearn <- results_sklearn[c(c(1:7),c(9:123)),]
+
+# rows column_3C_weka and column_2C_weka not in initial results, trains is missing
+results_sklearn <- results_sklearn[c(c(1:111),c(113:122)),]
+results_sklearn[111,"data"] = "trains"
+results_sklearn[111,4:9] = NA
