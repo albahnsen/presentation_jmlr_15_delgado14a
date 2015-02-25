@@ -353,6 +353,14 @@ algos_family[177,] = 'OM'
 algos_family[178,] = 'SVM'
 algos_family[179,] = 'NNET'
 
+colnames(algos_family) <- "Family"
+algos_family[,"Algorithm"] = rownames(algos_family)
+for (i in 1:dim(algos_family)[1]){
+  temp1 <- strsplit(algos_family$Algorithm[i], split="_")[[1]]
+  temp1 <- temp1[length(temp1)]
+  algos_family[i,"Implementation"] <- temp1  
+}
+
 save(algos_family, file="data/algos_family.Rda")
 
 # For ranking inpute mean
@@ -390,6 +398,7 @@ stats_bin['Family'] <- algos_family
 stats_bin <- stats_bin[order(stats_bin$FriedmanRank),]
 stats_bin['Rank'] <- c(1:dim(stats_bin)[1])
 save(stats_bin, file="data/stats_bin.Rda")
+
 
 
 
