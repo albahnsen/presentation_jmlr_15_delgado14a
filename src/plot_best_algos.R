@@ -26,7 +26,7 @@ plot_best_algos <- function(a,results_ranking, info_tables, results_by,colors) {
     geom_line(colour="#999999", aes_string(x="order", y="max"), size=2) +
     geom_line(colour=colors[a[1]], aes_string(x="order", y=a[1])) 
   # plt2 is distribution of the percentage of maximun
-  plt2 <- ggplot(temp) +  xlim(0,100) + xlab("Data set") + xlim(90,100) + 
+  plt2 <- ggplot(temp) +  xlim(0,100) + xlab("Percentage of best") + xlim(85,100) + 
     geom_density(aes_string(x=a[1],y="..density.."),  color=colors[a[1]], fill=colors[a[1]], alpha=0.3) +
     geom_vline(xintercept=mean(temp[,a[1]]), color=colors[a[1]], linetype="dashed", size=2)
   
@@ -53,10 +53,10 @@ plot_best_algos <- function(a,results_ranking, info_tables, results_by,colors) {
   legend <- g_legend(my_hist)
   
   # Combine plots
-  grid.arrange(arrangeGrob(plt1 + theme(legend.position="none", text = element_text(size=20)),
-                           plt2 + theme(legend.position="none", text = element_text(size=20)), ncol=1,
+  grid.arrange(arrangeGrob(plt1 + theme(legend.position="none", text = element_text(size=20)) + ggtitle("Accuracy vesus the best algorithm in each database"),
+                           plt2 + theme(legend.position="none", text = element_text(size=20)) + ggtitle("Distribution of the percentage of best accuracy"), ncol=1,
                            nrow=2), legend, ncol=1, nrow=2, heights=c(15, 1))
 }
 
-# a <- c("parRF_caret", "svm_C", "elm_kernel_matlab")
+# a <- c("parRF_caret", "svm_C", "RotationForest_weka")
 # plot_best_algos(a,results_ranking, info_tables, "ALL",colors)

@@ -50,7 +50,7 @@ plot_weighted_acc <- function(selected_algos,colors,results_ranking,info_tables,
     geom_line(linetype="dashed") + geom_point(alpha=0.5, size=7, aes(color=Algorithm),shape=19) + scale_color_manual(values = colors) +
     xlab("Algorithm") + ylab(names(accu)[match(result_stat, accu)]) + scale_x_discrete(breaks = 1:length(selected_algos), aes(limit=Algorithm)) +
     geom_line(linetype="dashed", alpha=0.2, aes(x=order,y=um)) + geom_point(alpha=0.3, size=3, aes(x=order,y=um,color=Algorithm),shape=19) + 
-    theme(text = element_text(size=20))
+    theme(text = element_text(size=20)) + ggtitle("Accuracy and weighted accuracy of selected classifiers")
   
 }
 
