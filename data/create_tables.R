@@ -395,12 +395,41 @@ stats_bin <- data.frame(colMeans(t(apply(-results_ranking[filter_ == "TRUE",!nam
 colnames(stats_bin) <- 'FriedmanRank'
 stats_bin['Accuracy']  <- colMeans(results[filter_ == "TRUE",], na.rm = TRUE)
 stats_bin['Algorithm'] <- rownames(stats_bin)
-stats_all['Family'] <- algos_family$Family
-stats_all['Implementation'] <- algos_family$Implementation
+stats_bin['Family'] <- algos_family$Family
+stats_bin['Implementation'] <- algos_family$Implementation
 stats_bin <- stats_bin[order(stats_bin$FriedmanRank),]
 stats_bin['Rank'] <- c(1:dim(stats_bin)[1])
 save(stats_bin, file="data/stats_bin.Rda")
 
 
 
-
+algos <- data.frame(Algorithm="",FullName="", color="", id=1:15, stringsAsFactors=FALSE)
+algos[1,1] <- "parRF_caret"
+algos[2,1] <- "svm_C"
+algos[3,1] <- "svmPoly_caret"
+algos[4,1] <- "elm_kernel_matlab"
+algos[5,1] <- "C5.0_caret"
+algos[6,1] <- "avNNet_caret"
+algos[7,1] <- "Bagging_LibSVM_weka"
+algos[8,1] <- "RotationForest_weka"
+algos[9,1] <- "knn_caret"
+algos[10,1] <- "glmnet_R"
+algos[11,1] <- "pcaNNet_caret"
+algos[12,1] <- "svmRadialCost_caret"
+algos[13,1] <- "rf_caret"
+algos[14,1] <- "MultiBoostAB_LibSVM_weka"
+algos[15,1] <- "fda_caret"
+n=15
+for (i in 1:15){
+  algos[i,2] <- paste(algos_family[algos[i,1],"Family"],algos[i,1], sep=" - ")
+  algos[i,3] <- rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)[i]
+}
+# n = 15
+# rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+# heat.colors(n, alpha = 1)
+# terrain.colors(n, alpha = 1)
+# topo.colors(n, alpha = 1)
+# cm.colors(n, alpha = 1)
+save(algos, file="data/algos.Rda")
+colors <- setNames(as.vector(algos$color), algos$Algorithm)
+selected_algos <- split(algos$Algorithm, algos$FullName)
