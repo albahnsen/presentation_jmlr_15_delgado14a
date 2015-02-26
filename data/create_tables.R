@@ -164,7 +164,7 @@ save(info_tables, file="data/info_tables.Rda")
 load(file="data/info_tables.Rda")
 
 # Import Results from sklearn
-load(file="experiments_sklearn/ExploreModels/results_sklearn.RDa")
+load(file="data/results_sklearn.RDa")
 
 # Row audiology-std is repeted
 results_sklearn <- results_sklearn[c(c(1:7),c(9:123)),]
@@ -174,12 +174,14 @@ results_sklearn <- results_sklearn[c(c(1:111),c(113:122)),]
 results_sklearn[111,"data"] = "trains"
 results_sklearn[111,4:9] = NA
 # keep only algos and change names
-results_sklearn <- results_sklearn[,4:9]
-sklearn_algos = c("graBoost_sklearn", "KNN5_sklearn", "logres_sklearn", "NB_sklearn", "RF_sklearn","SVM_sklearn")
+results_sklearn <- results_sklearn[,3:9]
+sklearn_algos = c("DT_sklearn", "graBoost_sklearn", "KNN5_sklearn", "logres_sklearn", "NB_sklearn", "RF_sklearn","SVM_sklearn")
 colnames(results_sklearn) <- sklearn_algos
 results_sklearn <- results_sklearn *100
 
+load(file="data/results.Rda")
 # add sklearn in results
+results <- results[,1:179]
 results[,sklearn_algos] <- results_sklearn
 save(results,file="data/results.Rda")
 # For ranking inpute mean
@@ -378,12 +380,13 @@ algos_family[177,] = 'OM'
 algos_family[178,] = 'SVM'
 algos_family[179,] = 'NNET'
 # Sklearn
-algos_family[180,] = 'BST'
-algos_family[181,] = 'NN'
-algos_family[182,] = 'GLM'
-algos_family[183,] = 'BY'
-algos_family[184,] = 'RF'
-algos_family[185,] = 'SVM'
+algos_family[180,] = 'DT'
+algos_family[181,] = 'BST'
+algos_family[182,] = 'NN'
+algos_family[183,] = 'GLM'
+algos_family[184,] = 'BY'
+algos_family[185,] = 'RF'
+algos_family[186,] = 'SVM'
 
 colnames(algos_family) <- "Family"
 algos_family[,"Algorithm"] = rownames(algos_family)
