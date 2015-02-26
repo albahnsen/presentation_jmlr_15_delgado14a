@@ -44,7 +44,7 @@ although it has been partially reduced due to the large amount of classifiers im
 - R (mainly from Statistics)
 - Weka (from the data mining field)
 - Matlab using the Neural Network Toolbox
-- Python*
+- Python sklearn*
 
 
 Introduction

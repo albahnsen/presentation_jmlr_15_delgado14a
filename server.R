@@ -1,3 +1,6 @@
+# Launch from console
+# R -e "shiny::runApp()"
+
 library(shiny)
 library(ggplot2)
 library(gridExtra)
