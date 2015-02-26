@@ -2,7 +2,7 @@ Conclusions
 ===
 <br />
 
-Exhaustive evaluation of **179 classifiers** (+6) belonging to a wide collection of **17 families** over the whole UCI machine learning classification database
+Exhaustive evaluation of **179 classifiers** (+7) belonging to a wide collection of **17 families** over the whole UCI machine learning classification database
 
 <br />
 
