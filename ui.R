@@ -93,8 +93,19 @@ shinyUI(navbarPage("Paper - DWNHC",
                                 submitButton("Update View")
                  ),
                  mainPanel(
-                   h4("Summary"),
                    plotOutput("plot_weighted", height=800)
+                 )
+               )               
+      ),
+      tabPanel("Implementations",
+               sidebarLayout(
+                 sidebarPanel(  width = 2,
+                                selectInput("by_family5", h4("Algorithm Family:"), 
+                                            choices = c("ALL", sort(unique(algos_family$Family)))),
+                                submitButton("Update View")
+                 ),
+                 mainPanel(
+                   plotOutput("plot_implementation", height=800)
                  )
                )               
       ),

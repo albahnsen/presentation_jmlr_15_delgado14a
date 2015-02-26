@@ -17,6 +17,8 @@ source("src/plot_comparison_families.R")
 source("src/plot_comparison_best.R")
 source("src/plot_weighted_acc.R")
 source("src/plot_bin_multi_comparison.R")
+source("src/plot_comparison_implementation.R")
+
 
 load(file="data/algos.Rda")
 selected_algos <- split(algos$Algorithm, algos$FullName)
@@ -103,6 +105,11 @@ shinyServer(function(input, output) {
   output$plot_bin_multi = renderPlot({
     plot_bin_multi_comparison(stats_all, stats_bin, selected_algos,colors,input$comparison_by4)
   })
+  
+  output$plot_implementation = renderPlot({
+    plot_comparison_implementation(stats_all, stats_bin, input$filter_binary, input$by_family5)
+  })
+  
 })
 
 
