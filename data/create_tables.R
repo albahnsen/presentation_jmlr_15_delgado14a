@@ -163,10 +163,35 @@ save(info_tables, file="data/info_tables.Rda")
 
 load(file="data/info_tables.Rda")
 
+# Import Results from sklearn
+load(file="experiments_sklearn/ExploreModels/results_sklearn.RDa")
+
+# Row audiology-std is repeted
+results_sklearn <- results_sklearn[c(c(1:7),c(9:123)),]
+
+# rows column_3C_weka and column_2C_weka not in initial results, trains is missing
+results_sklearn <- results_sklearn[c(c(1:111),c(113:122)),]
+results_sklearn[111,"data"] = "trains"
+results_sklearn[111,4:9] = NA
+# keep only algos and change names
+results_sklearn <- results_sklearn[,4:9]
+sklearn_algos = c("graBoost_sklearn", "KNN5_sklearn", "logres_sklearn", "NB_sklearn", "RF_sklearn","SVM_sklearn")
+colnames(results_sklearn) <- sklearn_algos
+results_sklearn <- results_sklearn *100
+
+# add sklearn in results
+results[,sklearn_algos] <- results_sklearn
+save(results,file="data/results.Rda")
+# For ranking inpute mean
+results_ranking <- results
+for (i in 1:dim(results_ranking)[1]){
+  results_ranking[i, is.na(results_ranking[i, ])] <- mean(data.matrix(results_ranking[i, ]),  na.rm = TRUE)
+}
+save(results_ranking, file="data/results_ranking.Rda")
+
+
 # ADD algorithm group
 load(file="data/results.Rda")
-
-
 
 nj = dim(results)[2]
 algos_family <- data.frame(matrix(ncol = 1, nrow = nj))
@@ -352,6 +377,13 @@ algos_family[176,] = 'OM'
 algos_family[177,] = 'OM'
 algos_family[178,] = 'SVM'
 algos_family[179,] = 'NNET'
+# Sklearn
+algos_family[180,] = 'BST'
+algos_family[181,] = 'NN'
+algos_family[182,] = 'GLM'
+algos_family[183,] = 'BY'
+algos_family[184,] = 'RF'
+algos_family[185,] = 'SVM'
 
 colnames(algos_family) <- "Family"
 algos_family[,"Algorithm"] = rownames(algos_family)
@@ -360,24 +392,12 @@ for (i in 1:dim(algos_family)[1]){
   temp1 <- temp1[length(temp1)]
   algos_family[i,"Implementation"] <- temp1  
 }
-
 save(algos_family, file="data/algos_family.Rda")
-
-# For ranking inpute mean
-
-results_ranking <- results
-for (i in 1:dim(results_ranking)[1]){
-  results_ranking[i, is.na(results_ranking[i, ])] <- mean(data.matrix(results_ranking[i, ]),  na.rm = TRUE)
-}
-save(results_ranking, file="data/results_ranking.Rda")
-
 
 # fix databases
 load(file="data/algos_family.Rda")
 load(file="data/results.Rda")
-load(file="data/results_ranking.Rda")
 load(file="data/info_tables.Rda")
-
 
 stats_all <- data.frame(colMeans(t(apply(-results_ranking[,!names(results_ranking) %in% c("order","max")], 1, rank, ties.method='average'))))
 colnames(stats_all) <- 'FriedmanRank'
@@ -402,7 +422,6 @@ stats_bin['Rank'] <- c(1:dim(stats_bin)[1])
 save(stats_bin, file="data/stats_bin.Rda")
 
 
-
 algos <- data.frame(Algorithm="",FullName="", color="", id=1:15, stringsAsFactors=FALSE)
 algos[1,1] <- "parRF_caret"
 algos[2,1] <- "svm_C"
@@ -412,11 +431,11 @@ algos[5,1] <- "C5.0_caret"
 algos[6,1] <- "avNNet_caret"
 algos[7,1] <- "Bagging_LibSVM_weka"
 algos[8,1] <- "RotationForest_weka"
-algos[9,1] <- "knn_caret"
+algos[9,1] <- "graBoost_sklearn"
 algos[10,1] <- "glmnet_R"
 algos[11,1] <- "pcaNNet_caret"
 algos[12,1] <- "svmRadialCost_caret"
-algos[13,1] <- "rf_caret"
+algos[13,1] <- "RF_sklearn"
 algos[14,1] <- "MultiBoostAB_LibSVM_weka"
 algos[15,1] <- "fda_caret"
 n=15
@@ -433,16 +452,3 @@ for (i in 1:15){
 save(algos, file="data/algos.Rda")
 colors <- setNames(as.vector(algos$color), algos$Algorithm)
 selected_algos <- split(algos$Algorithm, algos$FullName)
-
-
-
-# Import Results from sklearn
-load(file="experiments_sklearn/ExploreModels/results_sklearn.RDa")
-
-# Row audiology-std is repeted
-results_sklearn <- results_sklearn[c(c(1:7),c(9:123)),]
-
-# rows column_3C_weka and column_2C_weka not in initial results, trains is missing
-results_sklearn <- results_sklearn[c(c(1:111),c(113:122)),]
-results_sklearn[111,"data"] = "trains"
-results_sklearn[111,4:9] = NA
